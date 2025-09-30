@@ -1,8 +1,9 @@
-import {useState} from "react";
+import {useState, useEffect} from "react";
 import AddTicketForm from "./components/AddTicketForm";
 import axios from "axios";
 
 function App() {
+  const [loading, setLoading] = useState(true)
   const [tickets, setTickets] = useState([]);
 
   const onSubmit = async (ticket) => {
@@ -10,6 +11,14 @@ function App() {
     setTickets([...tickets, res.data]);
   }
 
+  useEffect(() => {
+    (async () => {
+      const res = await axios.get("http://localhost:3000/tickets");
+      setTickets(res.data);
+      setLoading(false);
+    })()
+  }, [])
+    
   return (
     <>
       {tickets.length}
