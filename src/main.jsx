@@ -11,6 +11,7 @@ createRoot(document.getElementById('root')).render(
     <BrowserRouter>
       <Routes>
         <Route element={<Main />}>
+          <Route path="/tickets/:ticketId" element={<Tickets />} />
           <Route exact path="/" element={<App />} />
           <Route path="*" element={<p>Not found</p>} />
         </Route>
