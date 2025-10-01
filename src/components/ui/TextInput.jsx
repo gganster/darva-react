@@ -1,20 +1,19 @@
-import "./TextInput.css"
-
-const TextInput = ({label, errorMessage, className, ...rest}) => {
+const TextInput = ({label, errorMessage, className = "", ...rest}) => {
   return (
-    <>
-      {label ?
-        <label className="TextInput-label">
+    <div className="flex flex-col gap-1">
+      {label && (
+        <label className="text-sm font-medium text-gray-700">
           {label}
         </label>
-        : null
-      }
+      )}
       <input
         {...rest}
-        className={`TextInput ${className}`}
+        className={`px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent ${className}`}
       />
-      {errorMessage ? <span className="TextInput-error">{errorMessage}</span> : null}
-    </>
+      {errorMessage && (
+        <span className="text-sm text-red-600">{errorMessage}</span>
+      )}
+    </div>
   )
 }
 

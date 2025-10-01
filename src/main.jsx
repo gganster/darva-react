@@ -1,20 +1,16 @@
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
-import './index.css'
 import { BrowserRouter, Routes, Route } from "react-router";
 
-import App from './App.jsx'
-import Main from './components/Layout/Main.jsx'
+import './index.css'
+
+import Index from './routes/index.jsx'
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
     <BrowserRouter>
       <Routes>
-        <Route element={<Main />}>
-          <Route path="/tickets/:ticketId" element={<Tickets />} />
-          <Route exact path="/" element={<App />} />
-          <Route path="*" element={<p>Not found</p>} />
-        </Route>
+        <Route exact path="/" element={<Index />} />
       </Routes>
     </BrowserRouter>
   </StrictMode>,
