@@ -1,43 +1,41 @@
 import { useNavigate } from "react-router";
-import { useEffect } from "react";
 import axios from "axios";
-
-import {useSelector, useDispatch} from 'react-redux'
-import { setTickets } from '../slices/ticketSlice'
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 
 const useTickets = (id) => {
+  const queryClient = useQueryClient();
+
   const navigate = useNavigate();
-  const tickets = useSelector(state => state.tickets.tickets);
-  const dispatch = useDispatch();
+  const {data: tickets, isPending} = useQuery({
+    queryKey: ['tickets'],
+    queryFn: () => fetch('http://localhost:3000/tickets').then(res => res.json())
+  });
 
-  const onCreate = async (ticket) => {
-    const response = await axios.post("http://localhost:3000/tickets", ticket);
-    dispatch(setTickets([...tickets, response.data]));
-    navigate(`/ticket/${response.data.id}`);
-  }
+  const onCreate = useMutation({
+    mutationFn: (ticket) => axios.post("http://localhost:3000/tickets", ticket),
+    onSuccess: (ticket) => {
+      //queryClient.invalidateQueries({ queryKey: ['tickets'] });
+      queryClient.setQueryData(['tickets'], (old) => [...old, ticket.data]);
+      navigate(`/ticket/${ticket.data.id}`);
+    }
+  });
 
-  const onUpdate = async (ticket) => {
-    const response = await axios.put(`http://localhost:3000/tickets/${ticket.id}`, ticket);
-    dispatch(setTickets(tickets.map(t => t.id === ticket.id ? response.data : t)));
-  }
+  const onUpdate = useMutation({
+    mutationFn: (ticket) => axios.put(`http://localhost:3000/tickets/${ticket.id}`, ticket),
+    onSuccess: (ticket) => {
+      queryClient.setQueryData(['tickets'], (old) => old.map(t => t.id === ticket.data.id ? ticket.data : t));
+    }
+  });
+  const onDelete = useMutation({
+    mutationFn: (id) => axios.delete(`http://localhost:3000/tickets/${id}`),
+    onSuccess: (_, id) => {
+      queryClient.setQueryData(['tickets'], (old) => old.filter(t => t.id !== id));
+    }
+  });
 
-  const onDelete = async (id) => {
-    await axios.delete(`http://localhost:3000/tickets/${id}`);
-    dispatch(setTickets(tickets.filter(t => t.id !== id)));
-  }
+  const ticket = tickets?.find(t => t.id === id);
 
-  useEffect(() => {
-    (async () => {
-      if (tickets.length > 0) return;
-
-      const response = await axios.get("http://localhost:3000/tickets");
-      dispatch(setTickets(response.data));
-    })();
-  }, [tickets, dispatch]);
-
-  const ticket = tickets.find(t => t.id === id);
-
-  return { tickets, ticket, onCreate, onUpdate, onDelete };
+  return { tickets, ticket, onCreate, onUpdate, onDelete, isPending };
 }
 
 export default useTickets;

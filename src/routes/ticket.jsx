@@ -9,7 +9,7 @@ const Ticket = () => {
   const {ticket, onUpdate} = useTickets(id);
 
   const onSubmit = async (ticket) => {
-    onUpdate(ticket);
+    onUpdate.mutate(ticket);
     navigate(`/`);
   }
 
