@@ -2,30 +2,27 @@ import { useState } from "react";
 import TextInput from "~/components/ui/TextInput";
 import Button from "~/components/ui/Button";
 
+import { z } from "zod";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+
+const TicketSchema = z.object({
+  title: z.string().min(1, {message: "Le titre est requis"}),
+  message: z.string().min(1, {message: "Le message est requis"})
+});
+
 const TicketForm = ({ initialTicket = null, onSubmit, onCancel = null }) => {
-  const [formData, setFormData] = useState({
-    title: initialTicket?.title || "",
-    message: initialTicket?.message || ""
+  const { register, handleSubmit, formState: { errors } } = useForm({
+    defaultValues: initialTicket,
+    resolver: zodResolver(TicketSchema)
   });
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData(prev => ({
-      ...prev,
-      [name]: value
-    }));
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    onSubmit({
-      ...formData,
-      ...(initialTicket ? {id: initialTicket.id} : {})
-    });
+  const _onSubmit = async (formData) => {
+    onSubmit(formData);
   };
 
   return (
-    <form onSubmit={handleSubmit} className="bg-white p-6 rounded-lg shadow-md space-y-4">
+    <form onSubmit={handleSubmit(_onSubmit)} className="bg-white p-6 rounded-lg shadow-md space-y-4">
       <h3 className="text-xl font-bold mb-4">
         {initialTicket ? "Modifier le ticket" : "Créer un ticket"}
       </h3>
@@ -33,9 +30,8 @@ const TicketForm = ({ initialTicket = null, onSubmit, onCancel = null }) => {
       <TextInput
         label="Titre"
         name="title"
-        value={formData.title}
-        onChange={handleChange}
-        required
+        {...register("title")}
+        errorMessage={errors.title?.message}
       />
 
       <div className="flex flex-col gap-1">
@@ -44,11 +40,10 @@ const TicketForm = ({ initialTicket = null, onSubmit, onCancel = null }) => {
         </label>
         <textarea
           name="message"
-          value={formData.message}
-          onChange={handleChange}
-          required
+          {...register("message")}
           rows={4}
           className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+          errorMessage={errors.message?.message}
         />
       </div>
 
