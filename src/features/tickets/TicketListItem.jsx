@@ -2,7 +2,7 @@ import { useState } from "react";
 import Button from "~/components/ui/Button";
 import TicketFormModal from "./TicketFormModal";
 
-const TicketListItem = ({ticket, onSubmit}) => {
+const TicketListItem = ({ticket, onSubmit, onDelete}) => {
   const [isOpen, setIsOpen] = useState(false);
 
   const onClose = () => {
@@ -34,7 +34,7 @@ const TicketListItem = ({ticket, onSubmit}) => {
           <Button variant="link" className="p-0" onClick={() => setIsOpen(true)}>
             Modifier
           </Button>
-          <Button variant="link" className="p-0 text-red-600 hover:text-red-800">
+          <Button variant="link" className="p-0 text-red-600 hover:text-red-800" onClick={() => onDelete(ticket.id)}>
             Supprimer
           </Button>
         </td>

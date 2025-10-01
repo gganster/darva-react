@@ -1,6 +1,6 @@
 import TicketListItem from "./TicketListItem";
 
-const TicketList = ({ tickets, onSubmit }) => {
+const TicketList = ({ tickets, onSubmit, onDelete }) => {
   return (
     <div className="container mx-auto p-6">
       <h2 className="text-2xl font-bold mb-6">Tickets</h2>
@@ -24,7 +24,7 @@ const TicketList = ({ tickets, onSubmit }) => {
           </thead>
           <tbody className="divide-y divide-gray-200">
             {tickets.map((ticket) => (
-              <TicketListItem key={ticket.id} ticket={ticket} onSubmit={onSubmit} />
+              <TicketListItem key={ticket.id} ticket={ticket} onSubmit={onSubmit} onDelete={onDelete} />
             ))}
           </tbody>
         </table>

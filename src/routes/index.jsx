@@ -16,6 +16,11 @@ const Index = () => {
     setTickets(tickets.map(t => t.id === ticket.id ? response.data : t));
   }
 
+  const onDelete = async (id) => {
+    await axios.delete(`http://localhost:3000/tickets/${id}`);
+    setTickets(tickets.filter(t => t.id !== id));
+  }
+
   useEffect(() => {
     (async () => {
       const response = await axios.get("http://localhost:3000/tickets");
@@ -27,7 +32,7 @@ const Index = () => {
     <div>
       <h1>Index</h1>
       <TicketForm onSubmit={onCreate} />
-      <TicketList tickets={tickets} onSubmit={onUpdate} />
+      <TicketList tickets={tickets} onSubmit={onUpdate} onDelete={onDelete} />
     </div>
   )
 }
