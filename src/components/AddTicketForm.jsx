@@ -22,8 +22,6 @@ const AddTicketForm = ({onSubmit}) => {
       message
     });
 
-    await fetch()
-
     setTitle("");
     setMessage("");
   }
