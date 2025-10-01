@@ -6,9 +6,14 @@ import axios from "axios";
 const Index = () => {
   const [tickets, setTickets] = useState([]);
 
-  const onSubmit = async (ticket) => {
+  const onCreate = async (ticket) => {
     const response = await axios.post("http://localhost:3000/tickets", ticket);
     setTickets([...tickets, response.data]);
+  }
+
+  const onUpdate = async (ticket) => {
+    const response = await axios.put(`http://localhost:3000/tickets/${ticket.id}`, ticket);
+    setTickets(tickets.map(t => t.id === ticket.id ? response.data : t));
   }
 
   useEffect(() => {
@@ -21,8 +26,8 @@ const Index = () => {
   return (
     <div>
       <h1>Index</h1>
-      <TicketForm onSubmit={onSubmit} />
-      <TicketList tickets={tickets} />
+      <TicketForm onSubmit={onCreate} />
+      <TicketList tickets={tickets} onSubmit={onUpdate} />
     </div>
   )
 }
