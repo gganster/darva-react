@@ -1,10 +1,11 @@
 import { useState } from "react";
 import Button from "~/components/ui/Button";
 import TicketFormModal from "./TicketFormModal";
+import { useNavigate } from "react-router";
 
 const TicketListItem = ({ticket, onSubmit, onDelete}) => {
   const [isOpen, setIsOpen] = useState(false);
-
+  const navigate = useNavigate();
   const onClose = () => {
     setIsOpen(false);
   }
@@ -28,7 +29,7 @@ const TicketListItem = ({ticket, onSubmit, onDelete}) => {
           {ticket.message}
         </td>
         <td className="px-6 py-4 whitespace-nowrap text-sm font-medium space-x-2">
-          <Button variant="link" className="p-0">
+          <Button variant="link" className="p-0" onClick={() => navigate(`/ticket/${ticket.id}`)}>
             Voir plus
           </Button>
           <Button variant="link" className="p-0" onClick={() => setIsOpen(true)}>

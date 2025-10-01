@@ -16,11 +16,11 @@ const TicketForm = ({ initialTicket = null, onSubmit, onCancel = null }) => {
     }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     onSubmit({
       ...formData,
-      id: initialTicket?.id || null
+      ...(initialTicket ? {id: initialTicket.id} : {})
     });
   };
 

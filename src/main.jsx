@@ -5,12 +5,17 @@ import { BrowserRouter, Routes, Route } from "react-router";
 import './index.css'
 
 import Index from './routes/index.jsx'
+import Ticket from './routes/ticket.jsx'
+import Main from './components/Layout/Main.jsx'
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
     <BrowserRouter>
       <Routes>
-        <Route exact path="/" element={<Index />} />
+        <Route element={<Main />}>
+          <Route exact path="/ticket/:id" element={<Ticket />} />
+          <Route exact path="/" element={<Index />} />
+        </Route>
       </Routes>
     </BrowserRouter>
   </StrictMode>,

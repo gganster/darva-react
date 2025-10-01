@@ -2,13 +2,16 @@ import { useState, useEffect } from "react";
 import TicketList from "../features/tickets/TicketList";
 import TicketForm from "../features/tickets/TicketForm";
 import axios from "axios";
+import { useNavigate } from "react-router";
 
 const Index = () => {
+  const navigate = useNavigate();
   const [tickets, setTickets] = useState([]);
 
   const onCreate = async (ticket) => {
     const response = await axios.post("http://localhost:3000/tickets", ticket);
     setTickets([...tickets, response.data]);
+    navigate(`/ticket/${response.data.id}`);
   }
 
   const onUpdate = async (ticket) => {
@@ -30,7 +33,6 @@ const Index = () => {
 
   return (
     <div>
-      <h1>Index</h1>
       <TicketForm onSubmit={onCreate} />
       <TicketList tickets={tickets} onSubmit={onUpdate} onDelete={onDelete} />
     </div>
